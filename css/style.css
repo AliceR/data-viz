@@ -35,6 +35,17 @@ header, footer, nav, body {
     height: inherit;
 }
 
+.originMarker {
+    stroke: none;
+    fill: hsla(187.6,76.5%,36.7%,0.2);
+    fill-opacity: 1;
+}
+.destinationMarker {
+    stroke: none;
+    fill: hsla(40.9,96.3%,57.3%,0.2);
+    fill-opacity: 1;
+}
+
 .legend {
     line-height: 18px;
     color: #555;
