@@ -18,6 +18,7 @@ html, body {
 	display: 		 flex;
 	flex-direction: column;
 	height: 100%;
+	margin: 5px;
 }
 
 header, footer, nav, body {
@@ -33,6 +34,14 @@ header, footer, nav, body {
             flex: 5 auto;
     min-height: 250px;
     height: inherit;
+}
+
+#timeline {
+	-webkit-flex: 2 auto;
+            flex: 2 auto;
+    min-height: 100px;
+    height: 25%;
+    padding: 10px;
 }
 
 .originMarker {

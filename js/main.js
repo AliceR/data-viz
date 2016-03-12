@@ -14,6 +14,7 @@ Papa.parse('../data/searches.csv', {
 	complete: function() {
 		console.log('Papaparse complete!');
 		createmap();
+		createtimeline();
 	}
 });
 
@@ -31,6 +32,4 @@ function convert(row){
 	row.data[0].destination = {'lat': destination.components[0].y, 'lon': destination.components[0].x};
 
 	subset.push(row.data[0]);
-}
-
 }
