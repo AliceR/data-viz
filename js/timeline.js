@@ -17,33 +17,41 @@ function createtimeline(){
 	for (var k in counts) hours.push([counts[k]]);
 
 	// TODO: update on window change
-	var w = document.getElementById("timeline").clientWidth;
-	var h = document.getElementById("timeline").clientHeight-30;
-	var barPadding = 1;
+	var w = document.getElementById('timeline').clientWidth-20;
+	var h = document.getElementById('timeline').clientHeight-30;
+	var padding = 20;
+
+	var color = d3.scale.linear()
+	    .domain([0, 6, 12, 18, 24])
+	    //.range(['#1693a5', '#89a667', '#fbb829', '#bf7573', '#1693a5'])
+	    .range(['#1693a5', '#aec297', '#fbb829', '#d7a9a8', '#1693a5'])
+	    .interpolate(d3.interpolateRgb);
 
 	var xScale = d3.scale.ordinal()
 		.domain(d3.range(hours.length))
-		.rangeRoundBands([0, w],0.05);
+		.rangeRoundBands([padding, w - padding],0.05);
+
+	var barWidth = xScale.rangeBand();
 
 	var yScale = d3.scale.linear()
-		.domain([0, Math.max( ...hours ) + 20])
-		.range([0, h]);
+		.domain([0, Math.max( ...hours )])
+		.range([0, h - padding]);
 
 	var svg = d3.select('#timeline')
 		.append('svg')
 		.attr('width', w)
-		.attr('height', h);
+		.attr('height', h + padding*2);
 
 	svg.selectAll('rect')
 		.data(hours)
 		.enter()
 		.append('rect')
 		.attr({
-			// TODO: color according to object key (hour)
-			fill: 'teal',
+			// color according to hour
+			fill: function(d, i){ return color(i); },
 			x: function(d, i){ return xScale(i); },
 			y: function(d){ return h - yScale(d); },
-			width: xScale.rangeBand(),
+			width: barWidth,
 			height: function(d){ return yScale(d); }
 		});
 
@@ -51,16 +59,35 @@ function createtimeline(){
 		.data(hours)
 		.enter()
 		.append('text')
-		.text(function(d){
-			return d;
-		})
+		.text(function(d){ return d; })
 		.attr({
-			// TODO: color according to object key (hour)
-			fill: 'teal',
-			x: function(d, i){ return xScale(i) + xScale.rangeBand() / 2; },
+			// color according to hour
+			fill: function(d, i){ return color(i); },
+			x: function(d, i){ return xScale(i) + barWidth / 2; },
 			y: function(d){ return h - yScale(d) - 3; },
 			'text-anchor': 'middle'
 		})
 
-	// TODO: lable axis
+	var xAxis = d3.svg.axis()
+		.scale(xScale)
+		.orient('bottom')
+		.tickFormat(function(d) { return d + ':00'; })
+		.outerTickSize([]);
+
+	svg.append('g')
+		.attr('class', 'axis')
+		.attr('transform', 'translate('+ -barWidth/2 +',' + h + ')')
+		.call(xAxis)
+	  .selectAll('.tick text')
+		.style('text-anchor', 'start')
+		.attr('x', 2)
+		.attr('y', 7);
+
+	svg.append('text')
+	    .attr('class', 'x label')
+	    .attr('text-anchor', 'end')
+	    .attr('x', w - padding)
+	    .attr('y', h + padding*1.5)
+	    .text('...time of the day');
+
 }
