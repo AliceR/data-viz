@@ -13,7 +13,7 @@ function createmap(){
 		L.circleMarker([origin.lat,origin.lon],
 		{
 			radius: 5,
-			className: 'mapMarker icon-origin',
+			className: 'mapMarker origin',
 			datarow: datarow
 		})
 		.addTo(map).on('click', onClick);
@@ -22,7 +22,7 @@ function createmap(){
 		L.circleMarker([destination.lat,destination.lon], 
 		{
 			radius: 5,
-			className: 'mapMarker icon-destination',
+			className: 'mapMarker destination',
 			datarow: datarow
 		})
 		.addTo(map).on('click', onClick);
@@ -36,8 +36,8 @@ function createmap(){
 			var container = L.DomUtil.create('div', 'legend');
 
 			container.innerHTML =
-			'<div><i style="background: #1693A5"></i> Origin</div>' + '<br>' +
-			'<div><i style="background: #FBB829"></i> Destination </div>';
+			'<div><i style="background: #3AB1CF"></i> Origin</div>' + '<br>' +
+			'<div><i style="background: #434343"></i> Destination </div>';
 			return container;
 		}
 	});
