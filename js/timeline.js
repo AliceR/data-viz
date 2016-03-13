@@ -14,7 +14,6 @@ function createtimeline(){
 	    // TODO: understand this
 	    counts[num] = counts[num] ? counts[num]+1 : 1;
 	}
-
 	for (var k in counts) hours.push([counts[k]]);
 
 	// TODO: update on window change
@@ -35,12 +34,12 @@ function createtimeline(){
 		.attr('width', w)
 		.attr('height', h);
 
-
 	svg.selectAll('rect')
 		.data(hours)
 		.enter()
 		.append('rect')
 		.attr({
+			// TODO: color according to object key (hour)
 			fill: 'teal',
 			x: function(d, i){ return xScale(i); },
 			y: function(d){ return h - yScale(d); },
@@ -56,6 +55,7 @@ function createtimeline(){
 			return d;
 		})
 		.attr({
+			// TODO: color according to object key (hour)
 			fill: 'teal',
 			x: function(d, i){ return xScale(i) + xScale.rangeBand() / 2; },
 			y: function(d){ return h - yScale(d) - 3; },

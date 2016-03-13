@@ -13,8 +13,8 @@ Papa.parse('../data/searches.csv', {
 	},
 	complete: function() {
 		console.log('Papaparse complete!');
-		createmap();
 		createtimeline();
+		createmap();
 	}
 });
 
