@@ -1,8 +1,8 @@
 function createtimeline(){
 	var everyhour = [], hours = [], counts = {}, prev;
 
-	for (var i = 0; i < subset.length; i++) {
-		var at = new Date(subset[i].at);
+	for (var i = 0; i < dataset.length; i++) {
+		var at = new Date(dataset[i].at);
 		var t = at.getHours();
 		everyhour.push(t);
 	}

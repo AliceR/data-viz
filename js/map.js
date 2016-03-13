@@ -3,28 +3,29 @@ function createmap(){
 	var map = L.map('map');
 	map.setView([52.501943, 13.421628], 12);
 
-	var layer = L.tileLayer('http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png',{
+	var basemap = L.tileLayer('http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png',{
 		attribution: '&#169; OpenStreetMap contributors, &#169; CartoDB'
-	});
+	}).addTo(map);
 
-	layer.addTo(map);
-
-	for (var i = 0; i < subset.length; i++) {
-		var origin = subset[i].origin;
+	for (var i = 0; i < dataset.length; i++) {
+		var origin = dataset[i].origin;
+		var datarow = dataset[i];
 		L.circleMarker([origin.lat,origin.lon],
 		{
 			radius: 5,
-			className: 'originMarker'
+			className: 'mapMarker icon-origin',
+			datarow: datarow
 		})
-		.addTo(map);
+		.addTo(map).on('click', onClick);
 
-		var destination = subset[i].destination;
+		var destination = dataset[i].destination;
 		L.circleMarker([destination.lat,destination.lon], 
 		{
 			radius: 5,
-			className: 'destinationMarker'
+			className: 'mapMarker icon-destination',
+			datarow: datarow
 		})
-		.addTo(map);
+		.addTo(map).on('click', onClick);
 	}
 
 	var legend = L.Control.extend({
@@ -45,18 +46,35 @@ function createmap(){
 
   	L.mapbox.accessToken = 'pk.eyJ1IjoiY2FydG9saWNlIiwiYSI6ImNpZmR3cGExeDAwZXJ0amx5ZTZpbDR6bjYifQ.dhipV0B_b9422-ArK5e04Q';
 
-  	// TODO: bind to user input
-  	var o = new L.latLng(52.414398, 13.363054);
-  	var d = new L.latLng(52.486399, 13.397615);
+	function onClick() {
+		var A = L.latLng(this.options.datarow.origin);
+		var B = L.latLng(this.options.datarow.destination);
+    	calculateRoute(A, B);
+	}
 
-  	// TODO: color according to time
-  	var routeStyle = {color: 'teal', weight: 4, opacity: .75};
+	function calculateRoute(A, B){
 
-   	var directions = new L.mapbox.directions({
-  		profile: 'mapbox.cycling',
-  		units: 'metric'});
-	var directionsLayer = new L.mapbox.directions.layer(directions, {routeStyle}).addTo(map);
-	var directionsRoutesControl = L.mapbox.directions.routesControl('routes', directions).addTo(map);
-	directions.setOrigin(o).setDestination(d).query();
-  	
+	  	// TODO: color according to time
+	  	var routeStyle = {color: 'teal', weight: 4, opacity: .75};
+
+	   	var directions = new L.mapbox.directions({
+	  		profile: 'mapbox.cycling',
+	  		units: 'metric'});
+		var directionsLayer = new L.mapbox.directions.layer(directions, {routeStyle}).addTo(map);
+		var directionsRoutes = L.mapbox.directions.routesControl('routes', directions).addTo(map);
+
+		directions.setOrigin(A).setDestination(B).query();
+
+		// TODO: replace standard A and B icons with custom ones
+		/*var myLayer = L.mapbox.featureLayer().addTo(map);
+		myLayer.on('layeradd', function(e) {
+	  		var marker = e.layer,
+	      	feature = marker.feature;
+	  		marker.setIcon(L.divIcon(feature.properties.icon));
+		});
+		myLayer.setGeoJSON(routeMarker);*/
+	}
+
+		
+
 }

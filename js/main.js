@@ -1,4 +1,4 @@
-var subset = [];
+var dataset = [];
 
 //Papa.SCRIPT_PATH = 'papaparse.min.js';
 
@@ -31,5 +31,5 @@ function convert(row){
 	var destination = wkt_d.read(row.data[0].destination);
 	row.data[0].destination = {'lat': destination.components[0].y, 'lon': destination.components[0].x};
 
-	subset.push(row.data[0]);
+	dataset.push(row.data[0]);
 }
