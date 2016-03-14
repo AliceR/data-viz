@@ -2,7 +2,8 @@ function createtimeline(){
 	var everyhour = [], hours = [], counts = {}, prev;
 
 	for (var i = 0; i < dataset.length; i++) {
-		var at = new Date(dataset[i].at);
+		// invalid date in safari, therefore replace - with /
+		var at = new Date(dataset[i].at.replace(/-/g, "/"));
 		var t = at.getHours();
 		everyhour.push(t);
 	}
@@ -66,7 +67,7 @@ function createtimeline(){
 			x: function(d, i){ return xScale(i) + barWidth / 2; },
 			y: function(d){ return h - yScale(d) - 3; },
 			'text-anchor': 'middle'
-		})
+		});
 
 	var xAxis = d3.svg.axis()
 		.scale(xScale)
@@ -84,10 +85,12 @@ function createtimeline(){
 		.attr('y', 7);
 
 	svg.append('text')
-	    .attr('class', 'x label')
-	    .attr('text-anchor', 'end')
-	    .attr('x', w - padding)
-	    .attr('y', h + padding*1.5)
+	    .attr({
+	    	'class': 'x label',
+	    	'text-anchor': 'end',
+	    	'x': w - padding,
+	    	'y': h + padding*1.5
+	    })
 	    .text('...time of the day');
 
 }
