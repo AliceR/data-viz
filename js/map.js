@@ -50,7 +50,6 @@ function createmap(){
 		var A = L.latLng(this.options.datarow.origin);
 		var B = L.latLng(this.options.datarow.destination);
 		var C = new Date(this.options.datarow.at.replace(/-/g, "/")).getHours();
-		console.log(C);
     	calculateRoute(A, B, C);
 	}
 
@@ -72,7 +71,14 @@ function createmap(){
 	   	var directions = new L.mapbox.directions({
 	  		profile: 'mapbox.cycling',
 	  		units: 'metric'});
-		var directionsLayer = new L.mapbox.directions.layer(directions, {routeStyle}).addTo(map);
+		var directionsLayer = new L.mapbox.directions.layer(directions, {
+			readonly:true,
+			routeStyle
+		}).addTo(directionsLayerGroup);
+
+        map.addLayer(directionsLayerGroup);
+
+		// for some reason this is required to draw the route line
 		var directionsRoutes = L.mapbox.directions.routesControl('routes', directions).addTo(map);
 
 		directions.setOrigin(A).setDestination(B).query();
@@ -87,6 +93,29 @@ function createmap(){
 		myLayer.setGeoJSON(routeMarker);*/
 	}
 
-		
+	L.Control.RemoveAll = L.Control.extend(
+	{
+	    options:
+	    {
+	        position: 'bottomleft',
+	    },
+	    onAdd: function (map) {
+	        var controlDiv = L.DomUtil.create('div', 'leaflet-draw-toolbar leaflet-bar');
+	        L.DomEvent
+	            .addListener(controlDiv, 'click', L.DomEvent.stopPropagation)
+	            .addListener(controlDiv, 'click', L.DomEvent.preventDefault)
+	        .addListener(controlDiv, 'click', function () {
+	            directionsLayerGroup.clearLayers();
+	        });
+
+	        var controlUI = L.DomUtil.create('a', 'leaflet-draw-edit-remove', controlDiv);
+	        controlUI.title = 'Clear map';
+	        controlUI.href = '#';
+	        controlUI.innerHTML = '<i class="fa fa-trash-o"></i>';
+	        return controlDiv;
+	    }
+	});
+	var removeAllControl = new L.Control.RemoveAll();
+	map.addControl(removeAllControl);
 
 }
