@@ -49,13 +49,25 @@ function createmap(){
 	function onClick() {
 		var A = L.latLng(this.options.datarow.origin);
 		var B = L.latLng(this.options.datarow.destination);
-    	calculateRoute(A, B);
+		var C = new Date(this.options.datarow.at.replace(/-/g, "/")).getHours();
+		console.log(C);
+    	calculateRoute(A, B, C);
 	}
 
-	function calculateRoute(A, B){
+	var directionsLayerGroup = new L.FeatureGroup();
+	function calculateRoute(A, B, C){
 
-	  	// TODO: color according to time
-	  	var routeStyle = {color: 'teal', weight: 4, opacity: .75};
+	  	// color according to time
+		var color = d3.scale.linear()
+	    .domain([0, 6, 12, 18, 24])
+	    .range(['#1693a5', '#aec297', '#fbb829', '#d7a9a8', '#1693a5'])
+	    .interpolate(d3.interpolateRgb);
+
+	  	var routeStyle = {
+	  		className: 'connection',
+	  		color: color(C),
+	  		weight: 4,
+	  		opacity: 1};
 
 	   	var directions = new L.mapbox.directions({
 	  		profile: 'mapbox.cycling',
