@@ -1,11 +1,13 @@
 function createtimeline(){
+
+	// TODO: click on bar selects filters data for this hour
+
 	var everyhour = [], hours = [], counts = {}, prev;
 
 	for (var i = 0; i < dataset.length; i++) {
 		// invalid date in safari, therefore replace - with /
-		var at = new Date(dataset[i].at.replace(/-/g, "/"));
-		var t = at.getHours();
-		everyhour.push(t);
+		var h = new Date(dataset[i].at.replace(/-/g, "/")).getHours();
+		everyhour.push(h);
 	}
 
 	// TODO: create data object in a format I can use directly in .data()
@@ -24,7 +26,6 @@ function createtimeline(){
 
 	var color = d3.scale.linear()
 	    .domain([0, 6, 12, 18, 24])
-	    //.range(['#1693a5', '#89a667', '#fbb829', '#bf7573', '#1693a5'])
 	    .range(['#1693a5', '#aec297', '#fbb829', '#d7a9a8', '#1693a5'])
 	    .interpolate(d3.interpolateRgb);
 
