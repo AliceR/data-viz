@@ -16,29 +16,54 @@ html, body {
 .wrapper {
 	display: -webkit-flex;
 	display: 		 flex;
-	flex-direction: column;
+	flex-direction: row;
 	height: 100%;
-	margin: 5px;
+    margin: 30px;
 }
 
-header, footer, nav, body {
-    margin: 0 auto;
-    max-width: 1600px;
-    color: #3b3b3b;
+header, footer, section {
+    width: 90%;
+    color: rgba(42,42,42,.5);
     background: white;
     font-family: 'Josefin Sans', sans-serif;
+    margin-left: auto;
+    margin-right:auto;
+}
+
+header {
+    position:absolute;
+    top: 0;
+    height: 3em;
+}
+
+section {
+    position: absolute;
+    bottom: 0;
+    top: 0;
+    right: 0;
+    left: 0;
+    z-index: 10;
+    height: auto;
+    margin-top: 3em;
+    margin-bottom: 1.6em;
+    overflow: hidden;
+}
+
+footer {
+    position:absolute;
+    bottom: 0;
+    height: 1.6em;
+
 }
 
 #map {
-	-webkit-flex: 5 auto;
-            flex: 5 auto;
+	width: 100%;
     min-height: 250px;
-    height: inherit;
+    height: 70%;
 }
 
 #timeline {
-	-webkit-flex: 2 auto;
-            flex: 2 auto;
+	width: 100%;
     min-height: 100px;
     height: 25%;
     padding: 10px;
@@ -95,3 +120,4 @@ header, footer, nav, body {
 .axis text {
 	font-size: 9px;
 }
+
