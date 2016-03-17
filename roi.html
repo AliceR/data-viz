@@ -30,9 +30,14 @@
 		</header>
 
 		<section>
-			<div id="map"></div>
-			<div id="timeline"></div>
-		</section>
+ 			<div class="spatial">
+				<div id="map"></div>
+ 			</div>
+ 			<div class="nonspatial">
+				<div id="timeline"></div>
+				<div id="piechart"></div>
+ 			</div>
+ 		</section>
 
 		<footer>
 			<p>Just some footnotes</p>
@@ -56,6 +61,7 @@
 	<script src='https://api.mapbox.com/mapbox.js/v2.3.0/mapbox.js'></script>	<script src='https://api.mapbox.com/mapbox.js/plugins/mapbox-directions.js/v0.4.0/mapbox.directions.js'></script> 
 
 	<!-- my scripts -->
+	<script src="js/piechart.js"></script>
 	<script src="js/map.js"></script>
 	<script src="js/timeline.js"></script>
 	<script src="js/main.js"></script>

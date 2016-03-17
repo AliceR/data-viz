@@ -1,8 +1,6 @@
 function createtimeline(){
 
-	// TODO: click on bar selects filters data for this hour
-
-	var everyhour = [], hours = [], counts = {}, prev;
+	var everyhour = [], hours = [], counts = {};
 
 	for (var i = 0; i < dataset.length; i++) {
 		// invalid date in safari, therefore replace - with /
@@ -19,7 +17,7 @@ function createtimeline(){
 	}
 	for (var k in counts) hours.push([counts[k]]);
 
-	// TODO: update on window change
+	// TODO: update size on window change
 	var w = document.getElementById('timeline').clientWidth-20;
 	var h = document.getElementById('timeline').clientHeight-30;
 	var padding = 20;
@@ -55,6 +53,9 @@ function createtimeline(){
 			y: function(d){ return h - yScale(d); },
 			width: barWidth,
 			height: function(d){ return yScale(d); }
+		})
+		.on('click', function() {
+			// TODO: only show markers (and routes) of that time 
 		});
 
 	svg.selectAll('text')

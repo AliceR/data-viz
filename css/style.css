@@ -13,7 +13,7 @@ html, body {
             box-sizing: inherit;
 }
 
-.wrapper {
+.wrapper, .nonspatial {
 	display: -webkit-flex;
 	display: 		 flex;
 	flex-direction: row;
@@ -63,10 +63,16 @@ footer {
 }
 
 #timeline {
-	width: 100%;
+	width: 80%;
     min-height: 100px;
     height: 25%;
     padding: 10px;
+}
+
+#piechart {
+    width: 19%;
+    min-height: 100px;
+    height: 25%;
 }
 
 .legend {
@@ -121,3 +127,6 @@ footer {
 	font-size: 9px;
 }
 
+rect:hover {
+    fill: orange;
+}

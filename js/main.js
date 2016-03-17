@@ -15,6 +15,7 @@ Papa.parse('../data/searches.csv', {
 		console.log('Papaparse complete!');
 		createtimeline();
 		createmap();
+		createpiechart();
 	}
 });
 
