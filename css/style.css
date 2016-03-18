@@ -60,12 +60,38 @@ body {
   	background: hsla(40.9,96.3%,57.3%,1);
 }
 
-.axis path,
-.axis line {
+.yaxis path,
+.xaxis line {
 	fill: none;
-	stroke: black;
+	stroke: #ccc;
 	shape-rendering: crispEdges;
 }
-.axis text {
-	font-size: 9px;
+
+.axislabel {
+    fill: #333;
+}
+
+.xaxis text {
+	/*font-size: 9px;*/
+    fill: #333;
+}
+
+rect:hover {
+    fill: orange;
+}
+
+/* scale chart with on window resize */
+.svg-container {
+    display: inline-block;
+    position: relative;
+    width: 100%;
+    padding-bottom: 30%; /* aspect ratio */
+    vertical-align: top;
+    overflow: hidden;
+}
+.svg-content-responsive {
+    display: inline-block;
+    position: absolute;
+    top: 10px;
+    left: 0;
 }

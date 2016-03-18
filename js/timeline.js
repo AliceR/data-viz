@@ -1,8 +1,6 @@
 function createtimeline(){
 
-	// TODO: click on bar selects filters data for this hour
-
-	var everyhour = [], hours = [], counts = {}, prev;
+	var everyhour = [], hours = [], counts = {};
 
 	for (var i = 0; i < dataset.length; i++) {
 		// invalid date in safari, therefore replace - with /
@@ -10,18 +8,16 @@ function createtimeline(){
 		everyhour.push(h);
 	}
 
-	// TODO: create data object in a format I can use directly in .data()
-	//		{'key': 0, 'value': 42},...	
+	// TODO: create data object in a format I can use directly in .data(), like this :{'key': 0, 'value': 42},...	
 	for(var i = 0; i< everyhour.length; i++) {
 	    var num = everyhour[i];	
-	    // TODO: understand this
+	    // TODO: understand this :-)
 	    counts[num] = counts[num] ? counts[num]+1 : 1;
 	}
 	for (var k in counts) hours.push([counts[k]]);
 
-	// TODO: update on window change
-	var w = document.getElementById('timeline').clientWidth-20;
-	var h = document.getElementById('timeline').clientHeight-30;
+	var w = document.getElementById('timeline').clientWidth;
+	var h = document.getElementById('timeline').clientHeight;
 	var padding = 20;
 
 	var color = d3.scale.linear()
@@ -40,9 +36,14 @@ function createtimeline(){
 		.range([0, h - padding]);
 
 	var svg = d3.select('#timeline')
-		.append('svg')
-		.attr('width', w)
-		.attr('height', h + padding*2);
+		.append('div')
+	   .classed('svg-container', true) // container class to make it responsive
+	   .append('svg')
+		// responsive SVG needs these 2 attributes and no width and height attr
+	   .attr('preserveAspectRatio', 'xMinYMin meet')
+	   .attr('viewBox', '0 0 '+ (w + padding) +' '+ (h + padding*2) +'')
+	   // class to make it responsive
+	   .classed('svg-content-responsive', true);
 
 	svg.selectAll('rect')
 		.data(hours)
@@ -55,6 +56,9 @@ function createtimeline(){
 			y: function(d){ return h - yScale(d); },
 			width: barWidth,
 			height: function(d){ return yScale(d); }
+		})
+		.on('click', function() {
+			// TODO: only show markers (and routes) of that time 
 		});
 
 	svg.selectAll('text')
@@ -67,7 +71,8 @@ function createtimeline(){
 			fill: function(d, i){ return color(i); },
 			x: function(d, i){ return xScale(i) + barWidth / 2; },
 			y: function(d){ return h - yScale(d) - 3; },
-			'text-anchor': 'middle'
+			'text-anchor': 'middle',
+			'font-size': barWidth/2
 		});
 
 	var xAxis = d3.svg.axis()
@@ -77,21 +82,31 @@ function createtimeline(){
 		.outerTickSize([]);
 
 	svg.append('g')
-		.attr('class', 'axis')
+		.attr('class', 'xaxis')
 		.attr('transform', 'translate('+ -barWidth/2 +',' + h + ')')
 		.call(xAxis)
 	  .selectAll('.tick text')
 		.style('text-anchor', 'start')
 		.attr('x', 2)
-		.attr('y', 7);
+		.attr('y', 7)
+		.attr('font-size', barWidth/3);
 
 	svg.append('text')
 	    .attr({
-	    	'class': 'x label',
+	    	'class': 'axislabel',
+	    	'text-anchor': 'start',
+	    	'x': padding*1.5,
+	    	'y': padding*1.5
+	    })
+	    .text('Total number of requests');
+
+	svg.append('text')
+	    .attr({
+	    	'class': 'axislabel',
 	    	'text-anchor': 'end',
-	    	'x': w - padding,
+	    	'x': w - padding*1.5,
 	    	'y': h + padding*1.5
 	    })
-	    .text('...time of the day');
+	    .text('...during the hours of a day');
 
 }
