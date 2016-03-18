@@ -51,6 +51,10 @@ body {
 	fill: #3AB1CF;
   	background: hsla(187.6,76.5%,36.7%,1);
 }
+.mapMarker:hover {
+    stroke: orange;
+    fill-opacity: 1;
+}
 .destination {
 	fill: #434343;
   	background: hsla(40.9,96.3%,57.3%,1);
@@ -65,4 +69,3 @@ body {
 .axis text {
 	font-size: 9px;
 }
-

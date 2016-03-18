@@ -8,15 +8,23 @@ function createmap(){
 	}).addTo(map);
 
 	for (var i = 0; i < dataset.length; i++) {
-		var origin = dataset[i].origin;
 		var datarow = dataset[i];
+		
+		var origin = dataset[i].origin;
 		L.circleMarker([origin.lat,origin.lon],
 		{
 			radius: 5,
 			className: 'mapMarker origin',
 			datarow: datarow
 		})
-		.addTo(map).on('click', onClick);
+		.addTo(map)
+		.on('click', onClick)
+		.on('mouseover', function(){
+			this.setRadius(10);
+		})
+		.on('mouseout', function(){
+			this.setRadius(5);
+		});
 
 		var destination = dataset[i].destination;
 		L.circleMarker([destination.lat,destination.lon], 
@@ -25,7 +33,13 @@ function createmap(){
 			className: 'mapMarker destination',
 			datarow: datarow
 		})
-		.addTo(map).on('click', onClick);
+		.addTo(map).on('click', onClick)
+		.on('mouseover', function(){
+			this.setRadius(10);
+		})
+		.on('mouseout', function(){
+			this.setRadius(5);
+		});
 	}
 
 	var legend = L.Control.extend({
@@ -78,7 +92,7 @@ function createmap(){
 
         map.addLayer(directionsLayerGroup);
 
-		// for some reason this is required to draw the route line
+		// for some reason (?) this is required to draw the route line
 		var directionsRoutes = L.mapbox.directions.routesControl('routes', directions).addTo(map);
 
 		directions.setOrigin(A).setDestination(B).query();
