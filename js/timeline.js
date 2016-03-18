@@ -18,6 +18,7 @@ function createtimeline(){
 
 	var w = document.getElementById('timeline').clientWidth;
 	var h = document.getElementById('timeline').clientHeight;
+
 	var padding = 20;
 
 	var color = d3.scale.linear()
