@@ -42,7 +42,7 @@
 			</div>
 			<div id="navbar" class="collapse navbar-collapse">
 				<ul class="nav navbar-nav">
-					<li><a href="#viz">Visualisation</a></li>
+					<li><a href="#">Visualisation</a></li>
 					<li><a href="#docu">Documentation</a></li>
 				</ul>
 			</div><!--/.nav-collapse -->
@@ -52,13 +52,57 @@
 	<div id="viz" class="container">
 		<div class="content">
 			<h1>Routes of Interest</h1>
+			<p>Routes requested by users in Berlin during one day in December</p>
 			<div id="map"></div>
+			<br>
+			<h3>Total number of requests</h3>
 			<div id="timeline"></div>
 		</div>		
 	</div><!-- /.container -->
 
 	<div id="docu" class="container">
 		<h2>Documentation</h2>
+
+		<h3>Libraries</h3>
+		<p>The following external libraries are used to create this visualisation:</p>
+		<ul>
+			<li><a href="http://papaparse.com/">Papa Parse</a> to parse the data from csv to json</li>
+			<li><a href="http://arthur-e.github.io/Wicket/">Wicket</a> to transform the coordinates from WKT to json objects containing lat and lon</li>
+			<li><a href="http://leafletjs.com/">Leaflet</a> for the map</li>
+			<li><a href="https://www.mapbox.com/api-documentation/#directions">Mapbox</a> for calculation of routes between the points</li>
+			<li><a href="http://getbootstrap.com/">Bootstrap</a> for a responsive layout</li>
+		</ul>
+
+		<h3>Testing and Known Bugs</h3>
+		<p>The page was tested in Chrome, Safari, and Firefox.</p>
+		<p>Work on the JavaScript code... 
+			<ul>
+				<li><mark>filtering markers is super slow. find a better way!</mark></li>
+				<li>handle overlapping markers... clustering?</li>
+				<li>zoom to extend button</li>
+				<li>check why CRS won't fit when using EPSG:4326 and WMS layer</li>
+				<li>zoom to selected route. Uncaught TypeError: e.getBounds is not a function ?
+				<li>replace standard A and B icons with custom ones
+				<li>create data object in a format I can use directly in d3.data(), like this: <code>{'key': 0, 'value': 42},...</code>
+				<li>understand this: <code>counts[num] = counts[num] ? counts[num]+1 : 1;</code> :)
+			</ul>
+		</p>
+
+
+		<h3>Further Ideas</h3>
+		<p>... </p>
+
+
+		<h3>Data Description</h3>
+		<p>The file <code>searches.csv</code> contains a random selection of route searches done by users in Berlin on one day.</p>
+
+		<h3>Task</h3>
+		<ol>
+			<li>Visualise the data using Javascript in at least one spatial representation and one non-spatial representation</li>
+			<li>Enrich the visualisation by adding external data</li>
+			<li>Deliver the final representation in a single product</li>
+		</ol>
+
 	</div><!-- /.container -->
 
 
@@ -67,7 +111,7 @@
 			<p>Just some footnotes</p>
 		</footer>
 	</div><!-- /.container -->
-	
+
 	<!-- ================================================== -->
 
 	<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
@@ -87,11 +131,11 @@
 	<script src="//d3js.org/d3.v3.min.js" charset="utf-8"></script>
 
 	<!-- Mapbox for routing -->
-	<script src='https://api.mapbox.com/mapbox.js/v2.3.0/mapbox.js'></script>	<script src='https://api.mapbox.com/mapbox.js/plugins/mapbox-directions.js/v0.4.0/mapbox.directions.js'></script> 
+	<script src='https://api.mapbox.com/mapbox.js/v2.3.0/mapbox.js'></script>
+	<script src='https://api.mapbox.com/mapbox.js/plugins/mapbox-directions.js/v0.4.0/mapbox.directions.js'></script> 
 
 	<!-- my scripts -->
-	<script src="./js/map.js"></script>
-	<script src="./js/timeline.js"></script>
+	<script src="./js/viz.js"></script>
 	<script src="./js/main.js"></script>
 
 </body>
