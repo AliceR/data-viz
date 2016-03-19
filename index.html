@@ -54,6 +54,10 @@
 			<h1>Routes of Interest</h1>
 			<p>Routes requested by users in Berlin during one day in December</p>
 			<div id="map"></div>
+			<!-- TODO: loading data waiting time spinner -->
+<!-- 			<div id="spinner" style="display: none;">
+      			<img src="assets/img/spinner.gif">
+    		</div> -->
 			<br>
 			<h3>Total number of requests</h3>
 			<div id="timeline"></div>
@@ -70,6 +74,8 @@
 			<li><a href="http://arthur-e.github.io/Wicket/">Wicket</a> to transform the coordinates from WKT to json objects containing lat and lon</li>
 			<li><a href="http://leafletjs.com/">Leaflet</a> for the map</li>
 			<li><a href="https://www.mapbox.com/api-documentation/#directions">Mapbox</a> for calculation of routes between the points</li>
+			<li><a href="https://github.com/kartenkarsten/leaflet-layer-overpass">L.OverPassLayer</a> for external data via Overpass API</li>
+			<li><a href="https://d3js.org/">D3</a> for the interactive visualisation</li>
 			<li><a href="http://getbootstrap.com/">Bootstrap</a> for a responsive layout</li>
 		</ul>
 
@@ -79,9 +85,11 @@
 			<ul>
 				<li><mark>filtering markers is super slow. find a better way!</mark></li>
 				<li>check why CRS won't fit when using EPSG:4326 and WMS layer</li>
-				<li>zoom to selected route. Uncaught TypeError: e.getBounds is not a function ?
-				<li>understand this: <code>counts[num] = counts[num] ? counts[num]+1 : 1;</code> :)
-				<li>create data object in a format I can use directly in d3.data(), like this: <code>{'key': 0, 'value': 42},...</code>
+				<li>zoom to selected route. Uncaught TypeError: e.getBounds is not a function ?</li>
+				<li>timeline does not scale correctly on small screens</li>
+				<li>understand this: <code>counts[num] = counts[num] ? counts[num]+1 : 1;</code> :) ˙&#13;&#10;
+					AH! <code>a ? b : c</code> --> <code>if a then b else c</code></li>
+				<li>create data object in a format I can use directly in d3.data(), like this: <code>{'key': 0, 'value': 42},...</code></li>
 				<li>...</li>
 			</ul>
 		</p>
@@ -136,6 +144,9 @@
 	<!-- Mapbox for routing -->
 	<script src='https://api.mapbox.com/mapbox.js/v2.3.0/mapbox.js'></script>
 	<script src='https://api.mapbox.com/mapbox.js/plugins/mapbox-directions.js/v0.4.0/mapbox.directions.js'></script> 
+
+	<!-- Overpass API for external data -->
+	<script src="./lib/OverPassLayer.js"></script>
 
 	<!-- my scripts -->
 	<script src="./js/viz.js"></script>

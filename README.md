@@ -7,6 +7,8 @@ The following external libraries are used to create this visualisation:</p>
 [Wicket](http://arthur-e.github.io/Wicket/) to transform the coordinates from WKT to json objects containing lat and lon
 [Leaflet](http://leafletjs.com/) for the map
 [Mapbox](https://www.mapbox.com/api-documentation/#directions) for calculation of routes between the points
+[D3](https://d3js.org/) for the interactive visualisation
+[L.OverPassLayer](https://github.com/kartenkarsten/leaflet-layer-overpass) for external data via Overpass API
 [Bootstrap](http://getbootstrap.com/) for a responsive layout
 
 

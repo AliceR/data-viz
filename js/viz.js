@@ -1,4 +1,6 @@
 function createViz(){
+	
+	// var spinner = 0;
 
 	var map = L.map('map', {
 		// crs: L.CRS.EPSG4326
@@ -7,8 +9,44 @@ function createViz(){
 
 	var basemap = L.tileLayer('http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png',{
 		attribution: 'Basemap: &#169; OpenStreetMap contributors, &#169; CartoDB',
-		// crs: L.CRS.EPSG4326
 	}).addTo(map);
+
+	var ext_data = new L.OverPassLayer({
+		endpoint: "http://overpass.osm.rambler.ru/cgi/",
+		query: "node(BBOX)['railway'='station'];out;",
+		callback: function(data) {
+			// TODO: loading data waiting time spinner
+			// if (spinner > 0) spinner -= 1;
+			// if (spinner == 0) $('#spinner').hide();
+			for(var i=0; i<data.elements.length; i++) {
+				var e = data.elements[i];
+
+				if (e.id in this.instance._ids) return;
+				this.instance._ids[e.id] = true;
+				var pos = new L.LatLng(e.lat, e.lon);
+				var m = L.marker(pos, 25, {
+					// TODO: insert custom icon
+					icon : new L.Icon.Default(),
+					// TODO: find out why title is not transmitted
+					title: e.tags.name
+				})
+				this.instance.addLayer(m);
+			}	
+		},
+		minzoom: 11,
+		beforeRequest: function() {
+			console.log('about to query the OverPassAPI');
+		},
+		afterRequest: function() {
+			console.log('all queries have finished!');
+		},
+		minZoomIndicatorOptions: {
+			position: 'topright',
+			minZoomMessageNoLayer: 'no layer assigned',
+			minZoomMessage: 'current Zoom-Level: CURRENTZOOM, external data loads at: MINZOOMLEVEL',
+		}
+	});
+	map.addLayer(ext_data);
 
 	// TODO: check why CRS won't fit
 	// var cyclingWMSLayer = L.tileLayer.wms("http://fbinter.stadt-berlin.de/fb/wms/senstadt/wmsk_radverkehrsanlagen", {
