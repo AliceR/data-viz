@@ -14,20 +14,16 @@ The following external libraries are used to create this visualisation:</p>
 The page was tested in Chrome, Safari, and Firefox.
 Work on the JavaScript code... 
  * filtering markers is super slow. find a better way!
- * handle overlapping markers... clustering?
- * zoom to extend button
  * check why CRS won't fit when using EPSG:4326 and WMS layer
  * zoom to selected route. Uncaught TypeError: e.getBounds is not a function ?
- * replace standard A and B icons with custom ones
  * create data object in a format I can use directly in d3.data(), like this: {'key': 0, 'value': 42},...
  * understand this: counts[num] = counts[num] ? counts[num]+1 : 1;
-
+ * ...
 
 ## Further Ideas
-
-
-
-
+ * handle overlapping markers... clustering?
+ * zoom to extend button
+ * replace standard A and B icons with custom ones
 
 
 ## Data Description
