@@ -89,8 +89,7 @@ footer{
     fill: #333;
 }
 
-rect:hover,
-.selected {
+rect:hover {
     stroke: orange;
     stroke-width: 2px;
 }

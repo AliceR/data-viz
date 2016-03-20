@@ -248,10 +248,9 @@ function createViz(){
 	   .on('click', function() {
 			console.log('filter map markers');
 
-			// TODO: how to find out if currently clicked bar is selected already?
-			if (this.className == 'selected'){
-				delete this.className['selected'];
+			if (this.attributes.length > 6 && this.attributes[6].value == 'orange'){
 				subset = dataset;
+				d3.select(this).attr('stroke', 'none');
 			} else {
 				// clear subset and create new based on selected hour
 				subset = [];
@@ -262,9 +261,9 @@ function createViz(){
 						subset.push(dataset[i]);				
 					}
 				}
+				d3.selectAll('rect').attr('stroke', 'none');
+				d3.select(this).attr({'stroke': 'orange', 'stroke-width':'2px'});
 			}
-			d3.selectAll('rect').attr('stroke', 'none');
-			d3.select(this).attr({'class':'selected'});
 			directionsLayerGroup.clearLayers();
 			markerLayerGroup.clearLayers();
 			createMarkers();
