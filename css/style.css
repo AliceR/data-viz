@@ -69,6 +69,10 @@ footer{
   	/*background: hsla(40.9,96.3%,57.3%,1);*/
 }
 
+.ext_icon {
+    opacity: 0.4;
+}
+
 /* timeline design */
 .xaxis line {
 	fill: none;
@@ -85,7 +89,8 @@ footer{
     fill: #333;
 }
 
-rect:hover {
+rect:hover,
+.selected {
     stroke: orange;
     stroke-width: 2px;
 }

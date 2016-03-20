@@ -24,10 +24,8 @@ function createViz(){
 				if (e.id in this.instance._ids) return;
 				this.instance._ids[e.id] = true;
 				var pos = new L.LatLng(e.lat, e.lon);
-				var m = L.marker(pos, 25, {
-					// TODO: insert custom icon
-					icon : new L.Icon.Default(),
-					// TODO: find out why title is not transmitted
+				var m = L.marker(pos, {
+					icon : L.divIcon({className: 'fa fa-subway ext_icon'}),
 					title: e.tags.name
 				})
 				this.instance.addLayer(m);
@@ -126,6 +124,8 @@ function createViz(){
 
 	map.addControl(new legend());
 
+	map.addControl(L.control.scale({imperial: false}));
+
 	L.mapbox.accessToken = 'pk.eyJ1IjoiY2FydG9saWNlIiwiYSI6ImNpZmR3cGExeDAwZXJ0amx5ZTZpbDR6bjYifQ.dhipV0B_b9422-ArK5e04Q';
 
 	function onClick() {
@@ -134,14 +134,6 @@ function createViz(){
 		var C = new Date(this.options.datarow.at.replace(/-/g, "/")).getHours();
 		calculateRoute(A, B, C);
 	}
-
-	map.on('boxzoomend', function(e) {
-		for (var i = 0; i < markerLayerGroup.length; i++) {
-			if (e.boxZoomBounds.contains(markerLayerGroup[i])) {
-				console.log(markerLayerGroup[i]);
-			}
-		}
-	});
 
 	function calculateRoute(A, B, C){
 
@@ -160,13 +152,14 @@ function createViz(){
 		}).addTo(directionsLayerGroup);
 
 		map.addLayer(directionsLayerGroup);
-		// TODO: zoom to selected route. Uncaught TypeError: e.getBounds is not a function ?
-		// map.fitBounds(directionsLayerGroup.getBounds());
 
 		// for some reason (?) this is required to draw the route line
 		var directionsRoutes = L.mapbox.directions.routesControl('routes', directions).addTo(map);
 
 		directions.setOrigin(A).setDestination(B).query();
+
+		// TODO: does not seem to work on mapbox.directions.layer
+		// map.fitBounds(directionsLayerGroup.getBounds());
 
 		// TODO: replace standard A and B icons with custom ones
 		/*var myLayer = L.mapbox.featureLayer().addTo(map);
@@ -178,31 +171,26 @@ function createViz(){
 		myLayer.setGeoJSON(routeMarker);*/
 	}
 
-	L.Control.ClearRoutes = L.Control.extend(
-	{
-		options:
-		{
-			position: 'bottomleft',
-		},
-		onAdd: function (map) {
-			var controlDiv = L.DomUtil.create('div', 'leaflet-draw-toolbar leaflet-bar');
-			L.DomEvent
-			.addListener(controlDiv, 'click', L.DomEvent.stopPropagation)
-			.addListener(controlDiv, 'click', L.DomEvent.preventDefault)
-			.addListener(controlDiv, 'click', function () {
-				directionsLayerGroup.clearLayers();
-			});
+	console.log(directionsLayerGroup, markerLayerGroup);
 
-			var controlUI = L.DomUtil.create('a', 'leaflet-draw-edit-remove', controlDiv);
-			controlUI.title = 'Clear map';
-			controlUI.href = '#';
-			controlUI.innerHTML = '<i class="fa fa-trash-o"></i>';
-			return controlDiv;
+	//////////////////////////////
+	////// CONTROL BUTTONS ///////
+	//////////////////////////////
+
+	$('#clearbtn').on('click', function(){
+		directionsLayerGroup.clearLayers();
+	});
+	$('#extendbtn').on('click', function(){
+		try {
+			map.fitBounds(markerLayerGroup.getBounds());
+		} catch (error) {
+			console.log('layer not loaded');
 		}
 	});
 
-	var clearRoutesControl = new L.Control.ClearRoutes();
-	map.addControl(clearRoutesControl);
+	//////////////////////////////
+	//// TIMELINE STARTS HERE ////
+	//////////////////////////////
 
 	for (var i = 0; i < dataset.length; i++) {
 		// invalid date in safari, therefore replace - with /
@@ -259,17 +247,24 @@ function createViz(){
 		})
 	   .on('click', function() {
 			console.log('filter map markers');
-			// clear subset and create new based on selected hour
-			subset = [];
-			for (var i = 0; i < dataset.length; i++) {
-				var hd = new Date(dataset[i].at.replace(/-/g, "/")).getHours();
-				var hs = d3.select(this).attr('hour');
-				if( hd == hs){
-					subset.push(dataset[i]);				
+
+			// TODO: how to find out if currently clicked bar is selected already?
+			if (this.className == 'selected'){
+				delete this.className['selected'];
+				subset = dataset;
+			} else {
+				// clear subset and create new based on selected hour
+				subset = [];
+				for (var i = 0; i < dataset.length; i++) {
+					var hd = new Date(dataset[i].at.replace(/-/g, "/")).getHours();
+					var hs = d3.select(this).attr('hour');
+					if( hd == hs){
+						subset.push(dataset[i]);				
+					}
 				}
 			}
 			d3.selectAll('rect').attr('stroke', 'none');
-			d3.select(this).attr({'stroke': 'orange', 'stroke-width': '2px'});
+			d3.select(this).attr({'class':'selected'});
 			directionsLayerGroup.clearLayers();
 			markerLayerGroup.clearLayers();
 			createMarkers();
