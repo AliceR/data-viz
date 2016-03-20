@@ -33,7 +33,7 @@ function createViz(){
 				this.instance.addLayer(m);
 			}	
 		},
-		minzoom: 11,
+		minzoom: 13,
 		beforeRequest: function() {
 			console.log('about to query the OverPassAPI');
 		},
@@ -258,22 +258,21 @@ function createViz(){
 			hour: function(d, i){ return i; }
 		})
 	   .on('click', function() {
-			// TODO: filtering markers like this is super slow. find a better way!
 			console.log('filter map markers');
+			// clear subset and create new based on selected hour
 			subset = [];
-
 			for (var i = 0; i < dataset.length; i++) {
 				var hd = new Date(dataset[i].at.replace(/-/g, "/")).getHours();
 				var hs = d3.select(this).attr('hour');
 				if( hd == hs){
 					subset.push(dataset[i]);				
 				}
-				directionsLayerGroup.clearLayers();
-				markerLayerGroup.clearLayers();
-				createMarkers();
 			}
-			console.log(subset);
-			d3.select(this).attr('stroke', 'orange');
+			d3.selectAll('rect').attr('stroke', 'none');
+			d3.select(this).attr({'stroke': 'orange', 'stroke-width': '2px'});
+			directionsLayerGroup.clearLayers();
+			markerLayerGroup.clearLayers();
+			createMarkers();
 		});
 
 	svg.selectAll('text')

@@ -15,7 +15,6 @@ The following external libraries are used to create this visualisation:</p>
 ## Testing and Known Bugs
 The page was tested in Chrome, Safari, and Firefox.
 Work on the JavaScript code... 
- * filtering markers is super slow. find a better way!
  * check why CRS won't fit when using EPSG:4326 and WMS layer
  * zoom to selected route. Uncaught TypeError: e.getBounds is not a function ?
  * create data object in a format I can use directly in d3.data(), like this: {'key': 0, 'value': 42},...
