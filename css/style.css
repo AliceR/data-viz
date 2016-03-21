@@ -31,13 +31,11 @@ footer{
 
 /* map markers */
 .mapMarker {
-    stroke: none;
-    fill-opacity: 0.5;
+    border: none;
 }
 
 .mapMarker:hover {
-    stroke: orange;
-    fill-opacity: 1;
+    border: 2px solid orange;
 }
 
 .origin {
@@ -121,3 +119,5 @@ rect:hover,
     top: 10px;
     left: 0;
 }
+
+/* some properties apply to svg and are therefore indicated as errors by the CSS validator*/

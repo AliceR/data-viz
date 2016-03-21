@@ -31,9 +31,9 @@ function createViz(){
 				var m = L.marker(pos, {
 					icon : L.divIcon({className: 'fa fa-subway ext_icon'}),
 					title: e.tags.name
-				})
+				});
 				this.instance.addLayer(m);
-			}	
+			}
 		},
 		minzoom: 13,
 		beforeRequest: function() {
@@ -45,9 +45,10 @@ function createViz(){
 		minZoomIndicatorOptions: {
 			position: 'topright',
 			minZoomMessageNoLayer: 'no layer assigned',
-			minZoomMessage: 'current Zoom-Level: CURRENTZOOM, external data loads at: MINZOOMLEVEL',
+			minZoomMessage: 'current Zoom-Level: CURRENTZOOM, external data loads at: MINZOOMLEVEL'
 		}
 	});
+
 	map.addLayer(ext_data);
 	ext_data.bringToBack();
 
@@ -55,20 +56,20 @@ function createViz(){
 		if (map.getZoom() < 13 && map.hasLayer(ext_data)) {
 			map.removeLayer(ext_data);
 		}
-		if (map.getZoom() > 13 && map.hasLayer(ext_data) == false) {
+		if (map.getZoom() > 13 && map.hasLayer(ext_data) === false) {
 			map.addLayer(ext_data);
 		}
 	});
 
 	// TODO: check why CRS won't fit
 	/*	var cyclingWMSLayer = L.tileLayer.wms("http://fbinter.stadt-berlin.de/fb/wms/senstadt/wmsk_radverkehrsanlagen", {
-	    layers: '0',
-	    format: 'image/png',
-	    version: '1.1.1',
-	    styles: 'default',
-	    // crs: 'EPSG:4326',
-	    attribution: "Geoportal Berlin / Radverkehrsanlagen",
-	    transparent: true
+		layers: '0',
+		format: 'image/png',
+		version: '1.1.1',
+		styles: 'default',
+		// crs: 'EPSG:4326',
+		attribution: "Geoportal Berlin / Radverkehrsanlagen",
+		transparent: true
 	}).addTo(map); */
 
 	// color according to time
@@ -109,7 +110,7 @@ function createViz(){
 					return 5;
 				}
 				return 50;
-            }
+	       }
 		});
 		var destinationCluster = L.markerClusterGroup({
 			showCoverageOnHover: false,
@@ -129,12 +130,12 @@ function createViz(){
 					return 5;
 				}
 				return 50;
-            }
+			}	
 		});
 
 		for (var i = 0; i < subset.length; i++) {
 			var datarow = subset[i];
-			
+
 			var origin = subset[i].origin;
 			L.marker([origin.lat,origin.lon],{
 				icon: L.divIcon({
@@ -219,11 +220,11 @@ function createViz(){
 			directionsLayer.originMarker = L.circleMarker([0,0],{
 					radius: 1,
 					className: 'mapMarker origin',
-        	});
-        	directionsLayer.destinationMarker = L.circleMarker([0,0],{
+			});
+			directionsLayer.destinationMarker = L.circleMarker([0,0],{
 					radius: 1,
 					className: 'mapMarker destination',
-        	});
+			});
 
 			directionsLayer.addTo(directionsLayerGroup);
 
@@ -240,8 +241,7 @@ function createViz(){
 		// TODO: does not seem to work on mapbox.directions.layer
 		// map.fitBounds(directionsLayerGroup.getBounds());
 
-	}
-
+	}	
 	//////////////////////////////
 	////// CONTROL BUTTONS ///////
 	//////////////////////////////
@@ -271,18 +271,18 @@ function createViz(){
 				this.disabled = state;
 			});
 		}
-	});
+	});  
 
 	/*$('#slider').slider({
 		min:0,
 		max:1,
-    	value: 0.4,
-    	step: 0.1,
-    	slide: function( event, ui ) {
-    		// does not work on FeatureGroups :(
-    		basemap.setOpacity(ui.value);
-    	}
-    });*/
+		value: 0.4,
+		step: 0.1,
+		slide: function( event, ui ) {
+			// does not work on FeatureGroups :(
+			basemap.setOpacity(ui.value);
+		}
+	});*/
 
 	//////////////////////////////
 	//// TIMELINE STARTS HERE ////
@@ -292,15 +292,15 @@ function createViz(){
 
 	for (var i = 0; i < dataset.length; i++) {
 		// invalid date in safari, therefore replace - with /
-		var h = new Date(dataset[i].at.replace(/-/g, "/")).getHours();
-		everyhour.push(h);
+		var t = new Date(dataset[i].at.replace(/-/g, "/")).getHours();
+		everyhour.push(t);
 	}
 
-	// TODO: create data object in a format I can use directly in .data(), like this :{'key': 0, 'value': 42},...	
+	// TODO: create data object in a format I can use directly in .data(), like this :{'key': 0, 'value': 42},..	
 	for(var i = 0; i< everyhour.length; i++) {
-		var num = everyhour[i];	
-	    // a ? b : c  is the same as if a then b else c
-	    counts[num] = counts[num] ? counts[num]+1 : 1;
+		var num = everyhour[i];
+		// a ? b : c is the same as if a then b else c
+		counts[num] = counts[num] ? counts[num]+1 : 1;
 	}
 
 	for (var k in counts) hours.push([counts[k]]);
@@ -311,14 +311,14 @@ function createViz(){
 	var padding = 20;
 
 	var xScale = d3.scale.ordinal()
-	.domain(d3.range(hours.length))
-	.rangeRoundBands([padding, w - padding],0.05);
+		.domain(d3.range(hours.length))
+		.rangeRoundBands([padding, w - padding],0.05);
 
 	var barWidth = xScale.rangeBand();
 
 	var yScale = d3.scale.linear()
-	.domain([0, Math.max( ...hours )])
-	.range([0, h - padding]);
+		.domain([0, Math.max( ...hours )])
+		.range([0, h - padding]);
 
 	var svg = d3.select('#timeline')
 		.append('div')
@@ -356,7 +356,7 @@ function createViz(){
 					var hd = new Date(dataset[i].at.replace(/-/g, "/")).getHours();
 					var hs = d3.select(this).attr('hour');
 					if( hd == hs){
-						subset.push(dataset[i]);				
+						subset.push(dataset[i]);
 					}
 				}
 				d3.selectAll('rect').classed('selected', false);
@@ -416,6 +416,7 @@ function createViz(){
 	for (var i = 0; i < 24; i++) { pseudocolor.push(1); }
 
 	var pie = d3.layout.pie();
+	pie.sort(null);
 	var outerRadius = (wc/2);
 	var innerRadius = ((wc/2)-40);
 	var arc = d3.svg.arc()

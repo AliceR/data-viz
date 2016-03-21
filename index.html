@@ -65,10 +65,10 @@
 	    			<p>Marker visibility:</p>
 	    			<div class="btn-group col-xs-4 col-sm-4 col-md-4 col-lg-4 pull-right" role="group" data-toggle="buttons">
 	    			<label id="onbtn" class="btn btn-default btn-xs active">
-	    				<input type="radio" name="options" autocomplete="off" checked> on
+	    				<input type="radio" name="options" checked> on
 	    			</label>
 	    			<label id="offbtn" class="btn btn-default btn-xs">
-	    				<input type="radio" name="options" autocomplete="off"> off
+	    				<input type="radio" name="options"> off
 	    			</label>
 					</div>
 				</div>
@@ -83,19 +83,19 @@
 	<div id="docu" class="container">
 		<h2>Documentation</h2>
 		<h3>Interaction</h3>
-		<p>The visualizations, both map and chart, are interactive. It is possible to
+		<p>The visualizations, both map and chart, are interactive. It is possible to</p>
 		<ul>
 			<li>zoom and pan the map, use shift&drag for box zoom</li>
 			<li>click markers on the map to show the respective route requested</li>
 			<li>click on a bar in the time line to filter map markers</li>
 			<li>use buttons to zoom to the full extend of the marker layer, clear all selected routes and turn off the marker layer</li>	
 		</ul>
-		If the map is zoomed in to level 13 or higher, external data is loaded via the OverpassAPI: Railway and subway stations are displayed on the map.
+		<p>If the map is zoomed in to level 13 or higher, external data is loaded via the OverpassAPI: Railway and subway stations are displayed on the map.
 		</p>
 		<h3>Design</h3>
 		<div class="row">
 			<div class="col-xs-8 col-sm-8 col-md-8 col-lg-8">
-				<p>To enable an intuitive interpretation the data, visual variables are applied according to the data's characteristics.</p>
+				<p>To enable an intuitive interpretation of the data, visual variables are applied according to the data's characteristics.</p>
 				<p>Markers on the map are differentiated by shape and colour to categorize two groups, <svg class="item origin" width="10px" height="10px"></svg> origin and <svg class="item destination" width="10px" height="10px"></svg> destination points. If there are several points located at one place, the marker size increases.</p>
 			</div>
 			<div class="col-xs-4 col-sm-4 col-md-4 col-lg-4 pull-right">
@@ -119,9 +119,8 @@
 				<div id="colorscheme"></div>
 			</div>
 			<div class="col-xs-9 col-sm-9 col-md-9 col-lg-8">
-				<p>The time line is coloured according to the time of the day. Night-times are in blue shades, daytimes yellow. To differentiate morning and afternoon, the colour scheme varies into green and red shades, respectively. This colour scheme is not linear, but circular - as the turn of the day is. The height of the bars represents the total number of requests within that hour.</p>
-				<p>The same colour scheme is applied to the routes, to indicate the time when the route was requested. I was thinking about colouring the markers according to this scheme as well, but this might lead to more clutter on the map and make the clustering confusing.</p>
-				<p><small>* the d3 pie layout seems to have a problem with Chrome, please swap the colours at 0:00 and 12:00 mentally :) - or check the page with Safari</small></p> 
+				<p>The time line is coloured according to the time of the day. Night-times are in blue shades, daytimes yellow. To differentiate morning and afternoon, the colour scheme varies into green and red shades, respectively. This colour scheme is not linear, but circular - as is the course of the day. The height of the bars represents the total number of requests within that hour.</p>
+				<p>The same colour scheme is applied to the routes, to indicate the time when the route was requested. I was thinking about colouring the markers according to this scheme as well, but this might lead to more clutter on the map and make the clustering confusing.</p> 
 			</div>
 		</div>
 
@@ -140,27 +139,23 @@
 
 		<h3>Testing and Bugs</h3>
 		<p>The page was tested in Chrome, Safari, and Firefox as well as on Android.</p>
-		<p>Some bugs are known and not yet fixed:
+		<p>Some bugs are known and not yet fixed:</p>
 			<ul>
 				<li>zoom to selected route does not work, nor zoom to FeatureGroup with directions layer. Uncaught TypeError: e.getBounds is not a function</li>
 				<li>time line does not scale correctly on small screens</li>
 				<li>CRS won't fit when using EPSG:4326 and WMS layer</li>
 			</ul>
-		</p>
-
 
 		<h3>Further Ideas</h3>
-		<p>
-			<ul>
-				<li>after filtering all routes could show up for that time slot</li>
-				<li>select multiple markers at once to show all their routes</li>
-				<li>bounce corresponding directions marker on hover</li>
-				<li>buttons to change routing profile (driving / cycling / walking) - or maybe show strait lines without routing</li>
-				<li>routes along same street to add up stroke width instead of overlapping each other</li>
-				<li>use distance for further analysis: how far do people travel?</li>
-				<li>check out <a href="https://square.github.io/crossfilter/">Crossfilter</a> for fast filtering of large datasets</li>
-			</ul>
-		</p>
+		<ul>
+			<li>after filtering all routes could show up for that time slot</li>
+			<li>select multiple markers at once to show all their routes</li>
+			<li>bounce corresponding directions marker on hover</li>
+			<li>buttons to change routing profile (driving / cycling / walking) - or maybe show straight lines without routing</li>
+			<li>routes along same street to add up stroke width instead of overlapping each other</li>
+			<li>use distance for further analysis: how far do people travel?</li>
+			<li>check out <a href="https://square.github.io/crossfilter/">Crossfilter</a> for fast filtering of large datasets</li>
+		</ul>
 
 		<h3>Data Description</h3>
 		<p>The file <code>searches.csv</code> contains a random selection of route searches done by users in Berlin on one day.</p>
