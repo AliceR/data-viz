@@ -1,6 +1,4 @@
 function createViz(){
-	
-	// var spinner = 0;
 
 	var map = L.map('map', {
 		// crs: L.CRS.EPSG4326
@@ -10,6 +8,8 @@ function createViz(){
 	var basemap = L.tileLayer('http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png',{
 		attribution: 'Basemap: &#169; OpenStreetMap contributors, &#169; CartoDB',
 	}).addTo(map);
+
+	// var spinner = 0;
 
 	var ext_data = new L.OverPassLayer({
 		endpoint: "http://overpass.osm.rambler.ru/cgi/",
@@ -45,17 +45,27 @@ function createViz(){
 		}
 	});
 	map.addLayer(ext_data);
+	ext_data.bringToBack();
+
+	map.on('zoomend', function () {
+		if (map.getZoom() < 13 && map.hasLayer(ext_data)) {
+			map.removeLayer(ext_data);
+		}
+		if (map.getZoom() > 13 && map.hasLayer(ext_data) == false) {
+			map.addLayer(ext_data);
+		}
+	});
 
 	// TODO: check why CRS won't fit
-	// var cyclingWMSLayer = L.tileLayer.wms("http://fbinter.stadt-berlin.de/fb/wms/senstadt/wmsk_radverkehrsanlagen", {
-	//     layers: '0',
-	//     format: 'image/png',
-	//     version: '1.1.1',
-	//     styles: 'default',
-	//     // crs: 'EPSG:4326',
-	//     attribution: "Geoportal Berlin / Radverkehrsanlagen",
-	//     transparent: true
-	// }).addTo(map);
+	/*	var cyclingWMSLayer = L.tileLayer.wms("http://fbinter.stadt-berlin.de/fb/wms/senstadt/wmsk_radverkehrsanlagen", {
+	    layers: '0',
+	    format: 'image/png',
+	    version: '1.1.1',
+	    styles: 'default',
+	    // crs: 'EPSG:4326',
+	    attribution: "Geoportal Berlin / Radverkehrsanlagen",
+	    transparent: true
+	}).addTo(map); */
 
 	// color according to time
 	var color = d3.scale.linear()
@@ -63,31 +73,68 @@ function createViz(){
 		.range(['#1693a5', '#aec297', '#fbb829', '#d7a9a8', '#1693a5'])
 		.interpolate(d3.interpolateRgb);
 
+	var subset = dataset;
 	var markerLayerGroup = new L.FeatureGroup();
 	var directionsLayerGroup = new L.FeatureGroup();
-	var subset = dataset;
-	var everyhour = [], hours = [], counts = {};
 
 	function createMarkers(){
+
+		var originCluster = L.markerClusterGroup({
+			showCoverageOnHover: false,
+			iconCreateFunction: function(cluster) {
+				var childCount = cluster.getChildCount();
+
+				var n = 10;
+				if (childCount < 3) {
+					n = 15;
+				} else if (childCount < 10) {
+					n = 25;
+				} else {
+					n = 40;
+				}
+
+				return L.divIcon({
+				// html: '<small>' + cluster.getChildCount() + '</small>',
+				className: 'marker-cluster mapMarker origin',
+				iconSize: new L.Point(n, n)
+			});
+			},
+			maxClusterRadius: 7
+		});
+		var destinationCluster = L.markerClusterGroup({
+			showCoverageOnHover: false,
+			iconCreateFunction: function(cluster) {
+				var childCount = cluster.getChildCount();
+
+				var n = 10;
+				if (childCount < 3) {
+					n = 15;
+				} else if (childCount < 10) {
+					n = 25;
+				} else {
+					n = 40;
+				}
+
+				return L.divIcon({
+				// html: '<small>' + cluster.getChildCount() + '</small>',
+				className: 'marker-cluster mapMarker destination',
+				iconSize: new L.Point(n, n)
+			});
+			},
+			maxClusterRadius: 7
+		});
 
 		for (var i = 0; i < subset.length; i++) {
 			var datarow = subset[i];
 			
 			var origin = subset[i].origin;
-			L.circleMarker([origin.lat,origin.lon],
-			{
+			L.circleMarker([origin.lat,origin.lon],{
 				radius: 5,
 				className: 'mapMarker origin',
 				datarow: datarow
 			})
-			.addTo(markerLayerGroup)
-			.on('click', onClick)
-			.on('mouseover', function(){
-				this.setRadius(10);
-			})
-			.on('mouseout', function(){
-				this.setRadius(5);
-			});
+			.addTo(originCluster)
+			.on('click', onClick);
 
 			var destination = subset[i].destination;
 			L.circleMarker([destination.lat,destination.lon], 
@@ -96,14 +143,13 @@ function createViz(){
 				className: 'mapMarker destination',
 				datarow: datarow
 			})
-			.addTo(markerLayerGroup).on('click', onClick)
-			.on('mouseover', function(){
-				this.setRadius(10);
-			})
-			.on('mouseout', function(){
-				this.setRadius(5);
-			});
+			.addTo(destinationCluster)
+			.on('click', onClick);
 		}
+
+		originCluster.addTo(markerLayerGroup);
+		destinationCluster.addTo(markerLayerGroup);
+
 		return markerLayerGroup;
 	}
 	createMarkers().addTo(map);
@@ -143,15 +189,15 @@ function createViz(){
 			weight: 4,
 			opacity: 1};
 
-		var directions = new L.mapbox.directions({
-			profile: 'mapbox.cycling',
-			units: 'metric'});
-		var directionsLayer = new L.mapbox.directions.layer(directions, {
-			readonly:true,
-			routeStyle
-		}).addTo(directionsLayerGroup);
+			var directions = new L.mapbox.directions({
+				profile: 'mapbox.cycling',
+				units: 'metric'});
+			var directionsLayer = new L.mapbox.directions.layer(directions, {
+				readonly:true,
+				routeStyle
+			}).addTo(directionsLayerGroup);
 
-		map.addLayer(directionsLayerGroup);
+			map.addLayer(directionsLayerGroup);
 
 		// for some reason (?) this is required to draw the route line
 		var directionsRoutes = L.mapbox.directions.routesControl('routes', directions).addTo(map);
@@ -170,8 +216,6 @@ function createViz(){
 		});
 		myLayer.setGeoJSON(routeMarker);*/
 	}
-
-	console.log(directionsLayerGroup, markerLayerGroup);
 
 	//////////////////////////////
 	////// CONTROL BUTTONS ///////
@@ -192,6 +236,8 @@ function createViz(){
 	//// TIMELINE STARTS HERE ////
 	//////////////////////////////
 
+	var everyhour = [], hours = [], counts = {};
+
 	for (var i = 0; i < dataset.length; i++) {
 		// invalid date in safari, therefore replace - with /
 		var h = new Date(dataset[i].at.replace(/-/g, "/")).getHours();
@@ -201,26 +247,26 @@ function createViz(){
 	// TODO: create data object in a format I can use directly in .data(), like this :{'key': 0, 'value': 42},...	
 	for(var i = 0; i< everyhour.length; i++) {
 		var num = everyhour[i];	
-	    // TODO: understand this :-)
+	    // a ? b : c  is the same as if a then b else c
 	    counts[num] = counts[num] ? counts[num]+1 : 1;
 	}
 
 	for (var k in counts) hours.push([counts[k]]);
 
-	var w = document.getElementById('timeline').clientWidth;
+		var w = document.getElementById('timeline').clientWidth;
 	var h = document.getElementById('timeline').clientHeight;
 
 	var padding = 20;
 
 	var xScale = d3.scale.ordinal()
-		.domain(d3.range(hours.length))
-		.rangeRoundBands([padding, w - padding],0.05);
+	.domain(d3.range(hours.length))
+	.rangeRoundBands([padding, w - padding],0.05);
 
 	var barWidth = xScale.rangeBand();
 
 	var yScale = d3.scale.linear()
-		.domain([0, Math.max( ...hours )])
-		.range([0, h - padding]);
+	.domain([0, Math.max( ...hours )])
+	.range([0, h - padding]);
 
 	var svg = d3.select('#timeline')
 		.append('div')
@@ -233,10 +279,10 @@ function createViz(){
 		.classed('chart-content-responsive', true);
 
 	svg.selectAll('rect')
-	   .data(hours)
-	   .enter()
-	   .append('rect')
-	   .attr({
+		.data(hours)
+		.enter()
+		.append('rect')
+		.attr({
 			// color according to hour
 			fill: function(d, i){ return color(i); },
 			x: function(d, i){ return xScale(i); },
@@ -245,12 +291,12 @@ function createViz(){
 			height: function(d){ return yScale(d); },
 			hour: function(d, i){ return i; }
 		})
-	   .on('click', function() {
+		.on('click', function() {
 			console.log('filter map markers');
 
 			if (this.attributes.length > 6 && this.attributes[6].value == 'orange'){
 				subset = dataset;
-				d3.select(this).attr('stroke', 'none');
+				d3.select(this).classed('selected', false);
 			} else {
 				// clear subset and create new based on selected hour
 				subset = [];
@@ -261,8 +307,8 @@ function createViz(){
 						subset.push(dataset[i]);				
 					}
 				}
-				d3.selectAll('rect').attr('stroke', 'none');
-				d3.select(this).attr({'stroke': 'orange', 'stroke-width':'2px'});
+				d3.selectAll('rect').classed('selected', false);
+				d3.select(this).classed('selected', true);
 			}
 			directionsLayerGroup.clearLayers();
 			markerLayerGroup.clearLayers();
@@ -270,11 +316,11 @@ function createViz(){
 		});
 
 	svg.selectAll('text')
-	   .data(hours)
-	   .enter()
-	   .append('text')
-	   .text(function(d){ return d; })
-	   .attr({
+		.data(hours)
+		.enter()
+		.append('text')
+		.text(function(d){ return d; })
+		.attr({
 			// color according to hour
 			fill: function(d, i){ return color(i); },
 			x: function(d, i){ return xScale(i) + barWidth / 2; },
@@ -284,27 +330,28 @@ function createViz(){
 		});
 
 	var xAxis = d3.svg.axis()
-	   .scale(xScale)
-	   .orient('bottom')
-	   .tickFormat(function(d) { return d + ':00'; })
-	   .outerTickSize([]);
+		.scale(xScale)
+		.orient('bottom')
+		.tickFormat(function(d) { return d + ':00'; })
+		.outerTickSize([]);
 
 	svg.append('g')
-	   .attr('class', 'xaxis')
-	   .attr('transform', 'translate('+ -barWidth/2 +',' + h + ')')
-	   .call(xAxis)
-	   .selectAll('.tick text')
-	   .style('text-anchor', 'start')
-	   .attr('x', 2)
-	   .attr('y', 7)
-	   .attr('font-size', barWidth/3);
+		.attr('class', 'xaxis')
+		.attr('transform', 'translate('+ -barWidth/2 +',' + h + ')')
+		.call(xAxis)
+		.selectAll('.tick text')
+		.style('text-anchor', 'start')
+		.attr('x', 2)
+		.attr('y', 7)
+		.attr('font-size', barWidth/3);
 
 	svg.append('text')
-	   .attr({
-	   	'class': 'axislabel',
-	   	'text-anchor': 'end',
-	   	'x': w - padding*1.5,
-	   	'y': h + padding*1.5
-	   })
-	   .text('...during the hours of a day');
+		.attr({
+			'class': 'axislabel',
+			'text-anchor': 'end',
+			'x': w - padding*1.5,
+			'y': h + padding*1.5
+		})
+		.text('...during the hours of a day');
+
 }

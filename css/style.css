@@ -60,24 +60,42 @@ footer{
 }
 
 .origin {
-	fill: #3AB1CF;
-  	/*background: hsla(187.6,76.5%,36.7%,1);*/
+    fill: #3AB1CF;
+  	background-color: hsla(187.6,76.5%,36.7%,0.5);
 }
 
 .destination {
-	fill: #434343;
-  	/*background: hsla(40.9,96.3%,57.3%,1);*/
+    fill: #434343;
+  	background-color: hsla(0,0%,26.3%,0.3);
 }
 
 .ext_icon {
-    opacity: 0.4;
+    opacity: 0.7;
 }
+
+/* marker cluster */
+.marker-cluster {
+    background-clip: padding-box;
+    border-radius: 20px;
+    }
+.marker-cluster div {
+    width: 30px;
+    height: 30px;
+    margin-left: 5px;
+    margin-top: 5px;
+
+    text-align: center;
+    border-radius: 15px;
+    }
+.marker-cluster span {
+    line-height: 30px;
+    }
 
 /* timeline design */
 .xaxis line {
-	fill: none;
-	stroke: #ccc;
-	shape-rendering: crispEdges;
+    fill: none;
+    stroke: #ccc;
+    shape-rendering: crispEdges;
 }
 
 .axislabel {
@@ -85,21 +103,22 @@ footer{
 }
 
 .xaxis text {
-	/*font-size: 9px;*/
     fill: #333;
 }
 
-rect:hover {
+rect:hover,
+.selected {
     stroke: orange;
     stroke-width: 2px;
 }
 
-/* scale chart with on window resize */
+/* scale chart on window resize */
 .chart-container {
     display: inline-block;
     position: relative;
     width: 100%;
-    padding-bottom: 30%; /* aspect ratio */
+    min-height: 150px;
+    padding-bottom: 30%;
     vertical-align: top;
     overflow: hidden;
 }
