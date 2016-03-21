@@ -420,4 +420,34 @@ function createViz(){
 		})
 		.text('...during the hours of a day');
 
+	/* color scheme for documentation */
+	var wc = document.getElementById('colorscheme').clientWidth;
+
+	var colorscheme = d3.select('#colorscheme')
+		.append('svg')
+		.attr('width', wc)
+		.attr('height', wc);
+
+	var pseudocolor = [];
+	for (var i = 0; i < 24; i++) { pseudocolor.push(1); }
+
+	var pie = d3.layout.pie();
+	var outerRadius = (wc/2);
+	var innerRadius = ((wc/2)-40);
+	var arc = d3.svg.arc()
+		.innerRadius(innerRadius)
+		.outerRadius(outerRadius);
+
+	var colorarcs = colorscheme.selectAll('g.arc')
+		.data(pie(pseudocolor))
+		.enter()
+		.append('g')
+		.attr('class', 'arc')
+		.attr('transform', 'translate(' + outerRadius + ', ' + outerRadius + ')');
+
+	colorarcs.append('path')
+		.attr('fill', function(d, i) {
+			return color(i);
+		})
+		.attr('d', arc);
 }
