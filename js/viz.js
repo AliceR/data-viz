@@ -95,15 +95,7 @@ function createViz(){
 			showCoverageOnHover: false,
 			iconCreateFunction: function(cluster) {
 				var childCount = cluster.getChildCount();
-
-				var s = 10;
-				if (childCount < 3) {
-					s = 15;
-				} else if (childCount < 10) {
-					s = 25;
-				} else {
-					s = 40;
-				}
+				var s = Math.sqrt(3*childCount) + 10;
 
 				return L.divIcon({
 					className: 'mapMarker origin',
@@ -111,7 +103,7 @@ function createViz(){
 				});
 			},
 			maxClusterRadius: function(zoom) {
-				if(zoom > 9 ) {
+				if(zoom > 7 ) {
 					return 20;
 				} else if (zoom > 12) {
 					return 5;
@@ -123,15 +115,7 @@ function createViz(){
 			showCoverageOnHover: false,
 			iconCreateFunction: function(cluster) {
 				var childCount = cluster.getChildCount();
-
-				var s= 10;
-				if (childCount < 5) {
-					s= 15;
-				} else if (childCount < 15) {
-					s= 25;
-				} else {
-					s= 40;
-				}
+				var s = Math.sqrt(2*childCount) + 10;
 
 				return L.divIcon({
 					className: 'mapMarker destination',
@@ -139,7 +123,7 @@ function createViz(){
 				});
 			},
 			maxClusterRadius: function(zoom) {
-				if(zoom > 9 ) {
+				if(zoom > 7 ) {
 					return 20;
 				} else if (zoom > 12) {
 					return 5;
