@@ -15,8 +15,46 @@ footer{
     min-height: 400px;
 }
 
+/* this does not do what I would like it to... */
+.toolbar {
+    justify-content: space-around;
+    align-content: center;
+}
+
 #timeline {
     min-height: 150px;
+}
+
+#colorscheme {
+    min-width: 100px;
+}
+
+/* map markers */
+.mapMarker {
+    stroke: none;
+    fill-opacity: 0.5;
+}
+
+.mapMarker:hover {
+    stroke: orange;
+    fill-opacity: 1;
+}
+
+.origin {
+    fill: #29fbb8;
+  	background-color: hsla(161.1,96.6%,34.1%,0.5);
+    background: hsla(161.1,96.6%,34.1%,0.5);
+    border-radius: 50px;
+}
+
+.destination {
+    fill: #424242;
+  	background-color: hsla(0,0%,25.9%,0.4);
+    background: hsla(0,0%,25.9%,0.4);
+}
+
+.ext_icon {
+    opacity: 0.7;
 }
 
 /* map legend */
@@ -33,10 +71,8 @@ footer{
 .legend i {
     width: 10px;
     height: 10px;
-    border-radius: 10px;
     float: left;
     margin-right: 8px;
-    opacity: 0.7;
 }
 
 .leaflet-control-minZoomIndicator {
@@ -47,49 +83,6 @@ footer{
     padding: 1px 15px;
     opacity: 0.5;
 }
-
-/* map markers */
-.mapMarker {
-    stroke: none;
-    fill-opacity: 0.5;
-}
-
-.mapMarker:hover {
-    stroke: orange;
-    fill-opacity: 1;
-}
-
-.origin {
-    fill: #3AB1CF;
-  	background-color: hsla(187.6,76.5%,36.7%,0.5);
-}
-
-.destination {
-    fill: #434343;
-  	background-color: hsla(0,0%,26.3%,0.3);
-}
-
-.ext_icon {
-    opacity: 0.7;
-}
-
-/* marker cluster */
-.marker-cluster {
-    background-clip: padding-box;
-    border-radius: 20px;
-    }
-.marker-cluster div {
-    width: 30px;
-    height: 30px;
-    margin-left: 5px;
-    margin-top: 5px;
-
-    text-align: center;
-    border-radius: 15px;
-    }
-.marker-cluster span {
-    line-height: 30px;
-    }
 
 /* timeline design */
 .xaxis line {

@@ -9,6 +9,10 @@ function createViz(){
 		attribution: 'Basemap: &#169; OpenStreetMap contributors, &#169; CartoDB',
 	}).addTo(map);
 
+	//////////////////////////////
+	/////// EXTERNAL DATA ////////
+	//////////////////////////////
+
 	// var spinner = 0;
 
 	var ext_data = new L.OverPassLayer({
@@ -73,74 +77,97 @@ function createViz(){
 		.range(['#1693a5', '#aec297', '#fbb829', '#d7a9a8', '#1693a5'])
 		.interpolate(d3.interpolateRgb);
 
+	//////////////////////////////
+	/////// CREATE MARKERS ///////
+	//////////////////////////////
+
 	var subset = dataset;
 	var markerLayerGroup = new L.FeatureGroup();
 	var directionsLayerGroup = new L.FeatureGroup();
 
 	function createMarkers(){
 
+		markerLayerGroup.clearLayers();
+		$('#onbtn').addClass("active");
+		$('#offbtn').removeClass("active");
+
 		var originCluster = L.markerClusterGroup({
 			showCoverageOnHover: false,
 			iconCreateFunction: function(cluster) {
 				var childCount = cluster.getChildCount();
 
-				var n = 10;
+				var s = 10;
 				if (childCount < 3) {
-					n = 15;
+					s = 15;
 				} else if (childCount < 10) {
-					n = 25;
+					s = 25;
 				} else {
-					n = 40;
+					s = 40;
 				}
 
 				return L.divIcon({
-				// html: '<small>' + cluster.getChildCount() + '</small>',
-				className: 'marker-cluster mapMarker origin',
-				iconSize: new L.Point(n, n)
-			});
+					className: 'mapMarker origin',
+					iconSize: new L.Point(s, s)
+				});
 			},
-			maxClusterRadius: 7
+			maxClusterRadius: function(zoom) {
+				if(zoom > 9 ) {
+					return 20;
+				} else if (zoom > 12) {
+					return 5;
+				}
+				return 50;
+            }
 		});
 		var destinationCluster = L.markerClusterGroup({
 			showCoverageOnHover: false,
 			iconCreateFunction: function(cluster) {
 				var childCount = cluster.getChildCount();
 
-				var n = 10;
-				if (childCount < 3) {
-					n = 15;
-				} else if (childCount < 10) {
-					n = 25;
+				var s= 10;
+				if (childCount < 5) {
+					s= 15;
+				} else if (childCount < 15) {
+					s= 25;
 				} else {
-					n = 40;
+					s= 40;
 				}
 
 				return L.divIcon({
-				// html: '<small>' + cluster.getChildCount() + '</small>',
-				className: 'marker-cluster mapMarker destination',
-				iconSize: new L.Point(n, n)
-			});
+					className: 'mapMarker destination',
+					iconSize: new L.Point(s, s)
+				});
 			},
-			maxClusterRadius: 7
+			maxClusterRadius: function(zoom) {
+				if(zoom > 9 ) {
+					return 20;
+				} else if (zoom > 12) {
+					return 5;
+				}
+				return 50;
+            }
 		});
 
 		for (var i = 0; i < subset.length; i++) {
 			var datarow = subset[i];
 			
 			var origin = subset[i].origin;
-			L.circleMarker([origin.lat,origin.lon],{
-				radius: 5,
-				className: 'mapMarker origin',
+			L.marker([origin.lat,origin.lon],{
+				icon: L.divIcon({
+					className: 'mapMarker origin',
+					iconSize: new L.Point(10, 10)
+				}),
 				datarow: datarow
 			})
 			.addTo(originCluster)
 			.on('click', onClick);
 
 			var destination = subset[i].destination;
-			L.circleMarker([destination.lat,destination.lon], 
-			{
-				radius: 5,
-				className: 'mapMarker destination',
+			L.marker([destination.lat,destination.lon],{
+				icon: L.divIcon({
+					className: 'mapMarker destination',
+					iconSize: new L.Point(10, 10)
+				}),
 				datarow: datarow
 			})
 			.addTo(destinationCluster)
@@ -154,6 +181,10 @@ function createViz(){
 	}
 	createMarkers().addTo(map);
 
+	//////////////////////////////
+	// LEGEND AND MAP CONTROLS ///
+	//////////////////////////////
+
 	var legend = L.Control.extend({
 		options: {
 			position: 'bottomright'
@@ -162,8 +193,8 @@ function createViz(){
 			var container = L.DomUtil.create('div', 'legend');
 
 			container.innerHTML =
-			'<div><i style="background: #3AB1CF"></i> Origin</div>' + '<br>' +
-			'<div><i style="background: #434343"></i> Destination </div>';
+				'<div><i class="origin" ></i> Origin</div> <br>' +
+				'<div><i class="destination" ></i> Destination </div>';
 			return container;
 		}
 	});
@@ -171,6 +202,10 @@ function createViz(){
 	map.addControl(new legend());
 
 	map.addControl(L.control.scale({imperial: false}));
+
+	//////////////////////////////
+	////////// ROUTING ///////////
+	//////////////////////////////
 
 	L.mapbox.accessToken = 'pk.eyJ1IjoiY2FydG9saWNlIiwiYSI6ImNpZmR3cGExeDAwZXJ0amx5ZTZpbDR6bjYifQ.dhipV0B_b9422-ArK5e04Q';
 
@@ -191,11 +226,22 @@ function createViz(){
 
 			var directions = new L.mapbox.directions({
 				profile: 'mapbox.cycling',
-				units: 'metric'});
+				units: 'metric'
+			});
 			var directionsLayer = new L.mapbox.directions.layer(directions, {
 				readonly:true,
 				routeStyle
-			}).addTo(directionsLayerGroup);
+			});
+			directionsLayer.originMarker = L.circleMarker([0,0],{
+					radius: 1,
+					className: 'mapMarker origin',
+        	});
+        	directionsLayer.destinationMarker = L.circleMarker([0,0],{
+					radius: 1,
+					className: 'mapMarker destination',
+        	});
+
+			directionsLayer.addTo(directionsLayerGroup);
 
 			map.addLayer(directionsLayerGroup);
 
@@ -204,17 +250,12 @@ function createViz(){
 
 		directions.setOrigin(A).setDestination(B).query();
 
+		// Enabled button:
+		$('#clearbtn').disable(false);
+
 		// TODO: does not seem to work on mapbox.directions.layer
 		// map.fitBounds(directionsLayerGroup.getBounds());
 
-		// TODO: replace standard A and B icons with custom ones
-		/*var myLayer = L.mapbox.featureLayer().addTo(map);
-		myLayer.on('layeradd', function(e) {
-	  		var marker = e.layer,
-	      	feature = marker.feature;
-	  		marker.setIcon(L.divIcon(feature.properties.icon));
-		});
-		myLayer.setGeoJSON(routeMarker);*/
 	}
 
 	//////////////////////////////
@@ -223,6 +264,7 @@ function createViz(){
 
 	$('#clearbtn').on('click', function(){
 		directionsLayerGroup.clearLayers();
+		$('#clearbtn').disable(true);
 	});
 	$('#extendbtn').on('click', function(){
 		try {
@@ -231,6 +273,32 @@ function createViz(){
 			console.log('layer not loaded');
 		}
 	});
+	$('#onbtn').on('click', function(){
+		createMarkers().addTo(map);
+	});
+	$('#offbtn').on('click', function(){
+		markerLayerGroup.clearLayers();
+	});
+
+	// Disable function
+	jQuery.fn.extend({
+		disable: function(state) {
+			return this.each(function() {
+				this.disabled = state;
+			});
+		}
+	});
+
+	/*$('#slider').slider({
+		min:0,
+		max:1,
+    	value: 0.4,
+    	step: 0.1,
+    	slide: function( event, ui ) {
+    		// does not work on FeatureGroups :(
+    		basemap.setOpacity(ui.value);
+    	}
+    });*/
 
 	//////////////////////////////
 	//// TIMELINE STARTS HERE ////
@@ -253,7 +321,7 @@ function createViz(){
 
 	for (var k in counts) hours.push([counts[k]]);
 
-		var w = document.getElementById('timeline').clientWidth;
+	var w = document.getElementById('timeline').clientWidth;
 	var h = document.getElementById('timeline').clientHeight;
 
 	var padding = 20;
@@ -310,8 +378,6 @@ function createViz(){
 				d3.selectAll('rect').classed('selected', false);
 				d3.select(this).classed('selected', true);
 			}
-			directionsLayerGroup.clearLayers();
-			markerLayerGroup.clearLayers();
 			createMarkers();
 		});
 

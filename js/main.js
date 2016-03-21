@@ -20,8 +20,6 @@ Papa.parse('../data/searches.csv', {
 	complete: function() {
 		console.log('Papaparse complete!');
 		createViz();
-		// createtimeline();
-		// createmap();
 	}
 });
 
