@@ -59,17 +59,17 @@
       			<i class="fa fa-spinner"></i>
     		</div> -->
     		<div class="row toolbar">
-	    		<button id="extendbtn" class="btn btn-default col-xs-4 col-sm-4 col-md-4 col-lg-4" type="submit" title="expand view"><i class="fa fa-arrows-alt"></i>  expand view</button>
-	    		<button id="clearbtn" class="btn btn-default col-xs-4 col-sm-4 col-md-4 col-lg-4" type="submit" title="clear routes" disabled="disabled"><i class="fa fa-remove"></i>  clear routes</button>
-	    		<div class="row toolbar">
-	    			<p>Marker visibility:</p>
-	    			<div class="btn-group col-xs-4 col-sm-4 col-md-4 col-lg-4 pull-right" role="group" data-toggle="buttons">
-	    			<label id="onbtn" class="btn btn-default btn-xs active">
+	    		<button id="extendbtn" class="btn btn-default col-xs-3 col-sm-3 col-md-3 col-lg-3" type="submit" title="expand view"><i class="fa fa-arrows-alt"></i>  expand view</button>
+	    		<button id="clearbtn" class="btn btn-default col-xs-3 col-sm-3 col-md-3 col-lg-3" type="submit" title="clear routes" disabled="disabled"><i class="fa fa-remove"></i>  clear routes</button>
+	    		<div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+	    			Marker visibility:
+	    			<div class="btn-group" role="group" data-toggle="buttons">
+	    				<label id="onbtn" class="btn btn-default active">
 	    				<input type="radio" name="options" checked> on
-	    			</label>
-	    			<label id="offbtn" class="btn btn-default btn-xs">
+	    				</label>
+	    				<label id="offbtn" class="btn btn-default">
 	    				<input type="radio" name="options"> off
-	    			</label>
+	    				</label>
 					</div>
 				</div>
     		</div>
@@ -90,7 +90,7 @@
 			<li>click on a bar in the time line to filter map markers</li>
 			<li>use buttons to zoom to the full extend of the marker layer, clear all selected routes and turn off the marker layer</li>	
 		</ul>
-		<p>If the map is zoomed in to level 13 or higher, external data is loaded via the OverpassAPI: Railway and subway stations are displayed on the map.
+		<p>If the map is zoomed in to level 13 or higher, external data is loaded via the OverpassAPI: Railway and subway stations are displayed on the map <i class="fa fa-subway ext_icon"></i>.
 		</p>
 		<h3>Design</h3>
 		<div class="row">

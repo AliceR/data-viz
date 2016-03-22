@@ -12,13 +12,7 @@ footer{
 }
 
 #map {
-    min-height: 400px;
-}
-
-/* this does not do what I would like it to... */
-.toolbar {
-    justify-content: space-around;
-    align-content: center;
+    min-height: 450px;
 }
 
 #timeline {
@@ -27,6 +21,15 @@ footer{
 
 #colorscheme {
     min-width: 100px;
+}
+
+/* toolbar adjustments */
+.toolbar {
+    margin:5px 0!important;
+}
+
+.toolbar > .btn {
+    margin-right:5px;
 }
 
 /* map markers */
